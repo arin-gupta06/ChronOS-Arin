@@ -1,254 +1,211 @@
+# 🩸 BloodConnect
 
-# 🩸 BloodConnect – Product Requirements Document (PRD)
-
-**Version:** 1.0.0  
-**Product Type:** Emergency Blood Coordination Platform  
-**Target Region:** India  
-**Primary Stakeholders:** Hospitals, Blood Banks, Donors, Patients, NGOs  
+**BloodConnect** is a production-ready web platform connecting Blood Donors, Seekers, and Hospitals during emergencies.
 
 ---
 
-## 1. Project Overview
+## 📋 Tech Stack
 
-### 1.1 Problem Statement
-In India, blood availability during medical emergencies is largely handled through informal and unreliable channels such as phone calls, WhatsApp groups, and social media posts. This results in delayed coordination, donor fatigue, fake or outdated requests, unsafe donations, and no visibility into where blood goes after donation.
-
-### 1.2 Vision
-BloodConnect aims to become an **emergency coordination layer**, not just a donor discovery platform. The system takes ownership of the emergency once a request is raised and ensures safe, verified, and timely blood delivery.
-
-### 1.3 Goals
-- Enable hospital-verified emergency blood requests  
-- Intelligently mobilize only eligible donors  
-- Reduce panic-driven donor spam  
-- Coordinate donor arrival in real time  
-- Track the journey of blood from donation to usage  
-
-### 1.4 Non‑Goals (v1)
-- Long-term donation campaigns  
-- Payments, incentives, or rewards  
-- Medical record storage  
-- GPS-level live blood tracking  
+| Layer       | Technology                    |
+|-------------|-------------------------------|
+| Backend     | Python Django 4.2             |
+| Database    | SQLite (dev) / PostgreSQL (prod) |
+| Frontend    | HTML5, CSS3, Bootstrap 5      |
+| Maps        | Leaflet.js (OpenStreetMap)    |
+| Auth        | Django Authentication         |
+| Admin       | Django Admin                  |
 
 ---
 
-## 2. Target Users
+## 🚀 Quick Start
 
-### 2.1 Donors
-- Individuals willing to donate blood  
-- Receive alerts only when eligible  
-- Minimal interaction, high trust  
+### Prerequisites
+- Python 3.10+
+- pip
 
-### 2.2 Seekers
-- Patients or patient representatives  
-- Can request blood and track progress  
-- Cannot directly contact donors  
+### 1. Clone & Setup
 
-### 2.3 Hospitals / Blood Banks
-- Verify emergency requests  
-- Coordinate donors  
-- Manage blood inventory  
-- Act as trust anchors  
+```bash
+cd bloodconnect
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-### 2.4 Admins
-- Approve hospitals  
-- Monitor misuse  
-- Audit system behavior  
+### 2. Configure Environment
 
----
+```bash
+cp .env.example .env
+# Edit .env and set your SECRET_KEY
+```
 
-## 3. Core Features
+### 3. Run Migrations
 
-### 3.1 Authentication & Authorization
-- OTP-based login (mobile-first)  
-- JWT access tokens  
-- Role-Based Access Control (RBAC)  
+```bash
+python manage.py makemigrations users donors seekers hospitals blood_requests
+python manage.py migrate
+```
 
-### 3.2 Emergency Blood Request Workflow
-- Requests created by seekers or hospitals  
-- Mandatory hospital verification  
-- Urgency levels: Normal / Critical  
-- Blood components: Whole Blood, RBC, Platelets, Plasma  
+### 4. Create Superuser (Admin)
 
-### 3.3 Intelligent Donor Matching Engine
-- Blood group compatibility  
-- Donation cooldown enforcement  
-- Time-to-reach estimation  
-- Donor fatigue protection  
-- Redis-backed coordination  
+```bash
+python manage.py createsuperuser
+```
 
-### 3.4 Emergency Escalation (Rush Mode)
-- Notify top eligible donors first  
-- Escalate in timed waves  
-- Expand radius gradually  
-- Fallback to nearby blood banks  
+### 5. Load Sample Data (Optional)
 
-### 3.5 Blood Journey Tracking
-Each donation generates a Blood Unit record:
+```bash
+python manage.py shell
+```
 
-Collected → Stored → Allocated → Used / Expired
+Then paste:
+```python
+from users.models import CustomUser
+from hospitals.models import HospitalProfile, BloodStock
+from donors.models import DonorProfile
 
-- No GPS tracking  
-- No donor identity exposure  
-- Read-only visibility for donors and seekers  
+# Create a sample hospital
+u = CustomUser.objects.create_user('hospital1', password='pass123', role='hospital', first_name='City', last_name='Hospital')
+h = HospitalProfile.objects.create(user=u, hospital_name='City General Hospital', address='123 Main St', city='Mumbai', state='Maharashtra', pincode='400001', contact_number='9999888777', verified=True, blood_bank_available=True, latitude=19.0760, longitude=72.8777)
+BloodStock.objects.create(hospital=h, a_positive=15, b_positive=8, o_positive=20, ab_positive=5, a_negative=3)
+```
 
-### 3.6 Notifications
-- OTP verification  
-- Emergency alerts  
-- Status updates  
-- Donation completion acknowledgements  
+### 6. Collect Static Files
 
----
+```bash
+python manage.py collectstatic
+```
 
-## 4. System Flow
+### 7. Start Development Server
 
-Seeker  
-↓ Create Request  
-Hospital  
-↓ Verify Emergency  
-Coordination Engine  
-↓ Filter Eligible Donors  
-Donor  
-↓ Accept / Decline  
-Hospital  
-↓ Confirm Arrival  
-Blood Unit Created  
-↓ Journey Tracking  
-Request Closed  
+```bash
+python manage.py runserver
+```
+
+Visit: **http://127.0.0.1:8000**
 
 ---
 
-## 5. Technical Specifications
+## 🌐 URLs
 
-### 5.1 Tech Stack
-
-**Frontend**
-- React (Web / PWA)
-- Axios
-- Socket.io (real-time)
-
-**Backend**
-- Node.js + Express
-- JWT authentication
-- RBAC middleware
-
-**Datastores**
-- MongoDB (persistent)
-- Redis (cache, rate limiting, escalation state)
-
-**Integrations**
-- SMS / Email / WhatsApp APIs
-- ETA/Maps service (optional)
+| URL | Description |
+|-----|-------------|
+| `/` | Home page |
+| `/users/login/` | Login |
+| `/users/register/` | Register |
+| `/users/dashboard/` | Dashboard (role-based) |
+| `/donors/dashboard/` | Donor dashboard |
+| `/seekers/dashboard/` | Seeker dashboard |
+| `/hospitals/dashboard/` | Hospital dashboard |
+| `/hospitals/list/` | All hospitals with map |
+| `/requests/list/` | All blood requests |
+| `/about/` | About page |
+| `/contact/` | Contact form |
+| `/admin/` | Django Admin panel |
 
 ---
 
-## 6. API Namespace
+## 👥 User Roles
 
-**Root:** `/api/v1`
+### Donor
+- Register with medical info (blood group, RH factor, health conditions)
+- See matching blood requests
+- Record donation history
+- Update availability status
 
----
+### Seeker
+- Create emergency blood requests
+- Search donors by blood type and city
+- View nearby hospitals
 
-## 7. API Endpoint Structure
+### Hospital
+- Manage blood stock inventory (A+, A-, B+, B-, O+, O-, AB+, AB-)
+- View emergency requests
+- Add/manage staff members
+- Get verified by admin
 
-### Auth (`/auth`)
-- POST `/login`
-- POST `/verify-otp`
-- POST `/refresh-token`
-
-### Users (`/users`)
-- GET `/me`
-- PUT `/me`
-
-### Emergency Requests (`/requests`)
-- POST `/create`
-- GET `/:requestId/status`
-- POST `/:requestId/verify` (Hospital)
-- POST `/:requestId/close` (Hospital)
-
-### Donors (`/donors`)
-- GET `/status`
-- POST `/respond`
-- GET `/history`
-
-### Hospitals (`/hospitals`)
-- GET `/dashboard`
-- GET `/inventory`
-- POST `/inventory/update`
-
-### Blood Units (`/blood-units`)
-- POST `/create`
-- PUT `/:unitId/status`
-- GET `/:unitId/timeline`
+### Admin
+- Full Django Admin access at `/admin/`
+- Verify hospitals
+- Manage all users, requests, and donations
 
 ---
 
-## 8. Permission Matrix
+## 🗺️ Map Features
 
-| Capability | Donor | Seeker | Hospital | Admin |
-|----------|-------|--------|----------|-------|
-| Login | ✓ | ✓ | ✓ | ✓ |
-| Create Request | ✗ | ✓ | ✓ | ✗ |
-| Verify Request | ✗ | ✗ | ✓ | ✗ |
-| Receive Donor Alert | ✓ | ✗ | ✗ | ✗ |
-| Accept Donation | ✓ | ✗ | ✗ | ✗ |
-| View Blood Journey | Partial | Partial | Full | Full |
-| Manage Inventory | ✗ | ✗ | ✓ | ✗ |
-| Approve Hospitals | ✗ | ✗ | ✗ | ✓ |
+Uses **Leaflet.js** with OpenStreetMap tiles:
+- Hospital locations
+- Emergency request markers
+- User's current location
+- Interactive popups with contact info
 
 ---
 
-## 9. Security
+## 📊 Database Models
 
-- JWT (short-lived access tokens)
-- Role guards on protected routes
-- OTP & API rate limiting (Redis)
-- No public donor listings
-- Minimal PII exposure
-- Admin audit logs
-
----
-
-## 10. Non‑Functional Requirements
-
-### Performance
-- Emergency request creation < 2s  
-- Donor alert dispatch < 5s  
-
-### Scalability
-- Burst traffic handling  
-- Stateless backend services  
-
-### Reliability
-- Retry logic for notifications  
-- Graceful degradation  
-
-### Usability
-- Mobile-first  
-- One-tap emergency actions  
-
-### Maintainability
-- Modular service architecture  
-- Config-driven rules  
+```
+CustomUser          - Extended user with role
+EmergencyContact    - Emergency contact per user
+DonorProfile        - Medical info for donors
+SeekerProfile       - Profile for seekers
+HospitalProfile     - Hospital details
+HospitalEmployee    - Staff members
+BloodStock          - Blood inventory per hospital
+BloodRequest        - Emergency blood requests
+DonorResponse       - Donor responses to requests
+BloodDonationHistory - Donation records
+```
 
 ---
 
-## 11. Success Criteria
+## 🔧 Production Deployment
 
-### Functional
-- All emergencies verified before donor alerts  
-- No donor contacted during cooldown  
-- Accurate blood journey tracking  
+### PostgreSQL Setup
 
-### Impact
-- Reduced time to donor confirmation  
-- Reduced donor spam  
-- Increased repeat donor participation  
+```env
+DATABASE_URL=postgres://user:password@host:5432/bloodconnect
+```
 
-### System Quality
-- Zero unauthorized access  
-- Stable under peak load  
+### Environment Variables
+
+```env
+SECRET_KEY=<strong-random-key>
+DEBUG=False
+ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+```
+
+### Static Files
+
+```bash
+python manage.py collectstatic
+```
+
+Use **WhiteNoise** (already configured) or serve via Nginx.
 
 ---
 
-## 12. Final Definition
+## 📞 Google Sheets Contact Form
 
-> **BloodConnect is a hospital-verified, real-time emergency blood coordination platform that intelligently mobilizes eligible donors and transparently tracks the journey of blood from donation to patient usage, designed for high-pressure environments like India.**
+1. Create a Google Apps Script Web App
+2. Set up a POST handler to write to a spreadsheet
+3. Add the Web App URL to `.env`:
+
+```env
+GOOGLE_SHEETS_CREDENTIALS=https://script.google.com/macros/s/YOUR_ID/exec
+```
+
+---
+
+## 🎨 Design
+
+- **Primary Color**: `#d62828` (Blood Red)
+- **Secondary Color**: `#34c1c6` (Teal)
+- **Theme**: Dark health-tech
+- **Fonts**: Syne (headings) + Plus Jakarta Sans (body)
+- **Components**: Bootstrap 5 + Custom CSS
+
+---
+
+## 📄 License
+
+MIT License — Free to use and modify.
