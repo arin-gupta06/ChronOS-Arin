@@ -43,19 +43,35 @@ export const ensureDummyAdmin = async () => {
     return;
   }
 
-  await User.create({
-    name,
-    email,
-    password,
-    role: "admin",
-    authProvider: "local",
-    skills: [],
-  });
+  try {
+    await User.create({
+      name,
+      email,
+      password,
+      role: "admin",
+      authProvider: "local",
+      skills: [],
+    });
 
-  logger.warn("Created dummy admin user for temporary access", {
-    email,
-    note: "Disable ENABLE_DUMMY_ADMIN after setup.",
-  });
+    logger.warn("Created dummy admin user for temporary access", {
+      email,
+      note: "Disable ENABLE_DUMMY_ADMIN after setup.",
+    });
+  } catch (error) {
+    // Handle E11000 duplicate key error on firebaseUid field
+    if (error.code === 11000 && error.keyPattern?.firebaseUid) {
+      logger.warn(
+        "Dummy admin creation skipped - firebaseUid conflict (orphaned documents exist)",
+        {
+          email,
+          details:
+            "Run database cleanup to remove orphaned null firebaseUid entries",
+        },
+      );
+    } else {
+      throw error; // Re-throw other errors
+    }
+  }
 };
 
 export default ensureDummyAdmin;

@@ -19,7 +19,8 @@ const GENERIC_AUTH_ERROR = {
 
 const GENERIC_REGISTRATION_ERROR = {
   success: false,
-  message: "Registration could not be completed. Please verify your details and try again.",
+  message:
+    "Registration could not be completed. Please verify your details and try again.",
 };
 
 const GENERIC_PASSWORD_RESET_RESPONSE = {
@@ -37,8 +38,13 @@ export const register = asyncHandler(async (req, res) => {
   const { name, email, password, skills, role: requestedRole } = req.body;
   const normalizedEmailValue = normalizeEmail(email);
 
+  console.log(
+    `🔍 [REGISTER DEBUG] Email received: "${email}" → normalized: "${normalizedEmailValue}"`,
+  );
+
   // Validate email format and domain approval
   const emailValidation = validateEmailForRegistration(normalizedEmailValue);
+  console.log(`🔍 [REGISTER DEBUG] Email validation result:`, emailValidation);
   if (!emailValidation.valid) {
     return res.status(400).json({
       success: false,
@@ -48,12 +54,17 @@ export const register = asyncHandler(async (req, res) => {
 
   // Resolve role based on email domain
   const role = resolveEmailRole(normalizedEmailValue, requestedRole);
+  console.log(`🔍 [REGISTER DEBUG] Resolved role: ${role}`);
   if (!role) {
     return res.status(400).json(GENERIC_REGISTRATION_ERROR);
   }
 
   // Check if email already registered
   const userExists = await User.findOne({ email: normalizedEmailValue });
+  console.log(
+    `🔍 [REGISTER DEBUG] User lookup result:`,
+    userExists ? `Found: ${userExists.email}` : "Not found",
+  );
   if (userExists) {
     return res.status(409).json({
       success: false,
@@ -62,6 +73,9 @@ export const register = asyncHandler(async (req, res) => {
   }
 
   try {
+    console.log(
+      `🔍 [REGISTER DEBUG] Creating new user with email: ${normalizedEmailValue}`,
+    );
     const user = await User.create({
       name,
       email: normalizedEmailValue,
@@ -70,8 +84,14 @@ export const register = asyncHandler(async (req, res) => {
       skills: skills || [],
     });
 
+    console.log(`✅ [REGISTER DEBUG] User created successfully: ${user._id}`);
     sendTokenResponse(user, 201, res);
   } catch (err) {
+    console.error(
+      `❌ [REGISTER DEBUG] Error during user creation:`,
+      err.code,
+      err.message,
+    );
     if (err.code === 11000) {
       return res.status(409).json({
         success: false,
