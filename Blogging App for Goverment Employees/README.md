@@ -1,117 +1,157 @@
-# Gov-Gazette 📰
+```markdown
+# GovGazette (GovBlog) — Blogging App for Government Employees
 
-A government-focused blogging platform built with **FastAPI** backend and **HTML/CSS** frontend. Government employees can post official gazette notifications, while normal users can only comment and engage.
+A lightweight blogging platform built with **FastAPI + Jinja2 templates + SQLite**. Government employees can **register/login**, then **create, edit, and delete** official blog/gazette posts. Logged-in employees can also **comment** on posts.
 
-[![Deployed on Render](https://img.shields.io/badge/Deployed-Render-brightgreen)](https://gov-gazette.onrender.com/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Modern%20Fast%20API-blue)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.9%2B-orange)](https://www.python.org/)
 
-## ✨ Features
+> Note: The folder name in this repo is currently **`Blogging App for Goverment Employees`** (misspelling of “Government”). This README matches the current repo structure.
 
-- **Role-based Access Control**
-  - Government employees: Create, edit, delete posts
-  - Normal users: View posts and comment only
-- **Blog Management System** for official government notifications
-- **Responsive HTML/CSS** frontend
-- **FastAPI** RESTful backend APIs
-- **Real-time** comment system
-- **Secure** authentication system
+---
 
-## 🚀 Live Demo
+## Features
 
-[https://gov-gazette.onrender.com/](https://gov-gazette.onrender.com/)
+### Employee authentication (Session-based)
+- Employee **registration** and **login**
+- Session management using Starlette **SessionMiddleware**
+- **Logout** clears the session
 
-## 🛠 Tech Stack
+### Blog management
+- View all blogs on the homepage (latest first)
+- Create a blog post (**employees only**)
+- Edit a blog post (**only the author**)
+- Delete a blog post (**only the author**)
 
-Backend: FastAPI, Python
-Frontend: HTML5, CSS3, Vanilla JavaScript
-Database: SQLite (Development) / PostgreSQL (Production)
-Deployment: Render
-Authentication: JWT/Session-based
+### Comments
+- View comments on each blog post
+- Add comments (**employees only**)
 
-text
+---
 
-## 📋 Quick Start
+## Tech Stack
+- **Backend:** FastAPI
+- **Templates:** Jinja2 (`Jinja2Templates`)
+- **Database:** SQLite + SQLAlchemy ORM
+- **Sessions:** Starlette `SessionMiddleware`
+- **Static files:** served from `/static`
 
-### Prerequisites
-- Python 3.9+
-- Git
+---
 
-### Clone & Run Locally
+## Project Structure
+```text
+Blogging App for Goverment Employees/
+├── main.py                 # FastAPI app (routes + DB + models are defined here)
+├── templates/              # Jinja2 HTML templates
+├── static/                 # CSS/JS assets
+├── requirements.txt        # Python dependencies
+├── README.md               # Documentation
+├── models.py               # SQLAlchemy models (optional/for refactor)
+├── database.py             # DB setup helpers (optional/for refactor)
+└── LICENSE
+```
 
+---
+
+## Requirements
+- Python **3.9+**
+- pip
+
+---
+
+## Setup & Run Locally
+
+### 1) Navigate to the project folder
 ```bash
-git clone [https://github.com/yourusername/gov-gazette.git](https://github.com/ananyascodes/Gov-Gazette/tree/main)
-cd gov-gazette
+cd "Blogging App for Goverment Employees"
+```
+
+### 2) Create and activate a virtual environment
+**macOS/Linux**
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+**Windows (PowerShell)**
+```powershell
+python -m venv venv
+venv\Scripts\Activate.ps1
+```
+
+### 3) Install dependencies
+```bash
 pip install -r requirements.txt
-cp .env.example .env
-# Update .env with your configuration
+```
+
+### 4) Run the application
+```bash
 uvicorn main:app --reload --port 8000
-Visit http://localhost:8000
+```
 
-Environment Variables
-text
-DATABASE_URL=sqlite:///./gov_gazette.db
-SECRET_KEY=your-secret-key-here
-DEBUG=True
-👥 User Roles & Permissions
-Role	Can Post Blogs	Can Comment	Can Edit Posts	Can Delete Posts
-Gov Employee	✅ Yes	✅ Yes	✅ Yes	✅ Yes
-Normal User	❌ No	✅ Yes	❌ No	❌ No
+Open:
+- http://localhost:8000
 
+---
 
-📖 API Endpoints
-Method	Endpoint	Description	Auth Required
-POST	/api/posts/	Create new blog post	Gov Employee
-GET	/api/posts/	List all posts	No
-GET	/api/posts/{id}	Get single post	No
-POST	/api/posts/{id}/comments	Add comment	User
-PUT	/api/posts/{id}	Update post	Gov Employee
+## How to Use
 
+### Register (Employee)
+1. Visit: `/register`
+2. Fill in: name, contact, sector, position, password
+3. After successful registration, you are logged in automatically.
 
+### Login
+1. Visit: `/login`
+2. Login uses:
+   - **Employee ID** (numeric)
+   - Password
 
-🏗 Project Structure
-text
-gov-gazette/
-├── app/
-│   ├── main.py              # FastAPI app entrypoint
-│   ├── models/              # Database models
-│   ├── schemas/             # Pydantic schemas
-│   ├── routers/             # API routes
-│   ├── static/              # CSS, JS, images
-│   └── templates/           # HTML templates
-├── requirements.txt
-├── .env.example
-└── README.md
+### Create a Blog Post
+- Visit: `/create-blog` (must be logged in)
 
+### Edit or Delete a Blog Post
+- Visit a blog detail page: `/blog/{blog_id}`
+- Edit/Delete options appear only for the blog author.
 
+### Comment on a Blog Post
+- Visit: `/blog/{blog_id}`
+- Logged-in employees can post a comment.
 
-🔐 Authentication
-Gov Employees: Register/Login with government credentials
+---
 
-Normal Users: Register/Login as regular users
+## Routes
 
-Role-based permissions enforced at API level
+### Public
+- `GET /` — Home page (list blogs)
+- `GET /login` — Login page
+- `POST /login` — Login submission
+- `GET /register` — Register page
+- `POST /register` — Register submission
+- `GET /blog/{blog_id}` — Blog detail + comments list
 
-🚀 Deployment
-Render (Recommended)
-Fork this repo
+### Requires employee session
+- `GET /create-blog`
+- `POST /create-blog`
+- `GET /blog/{blog_id}/edit`
+- `POST /blog/{blog_id}/edit`
+- `POST /blog/{blog_id}/delete`
+- `POST /blog/{blog_id}/comment`
+- `POST /logout`
 
-Connect to Render
+---
 
-Set build command: pip install -r requirements.txt
+## Database
+- SQLite database file: **`blog.db`**
+- Tables are created automatically at startup.
 
-Set start command: uvicorn main:app --host 0.0.0.0 --port $PORT
+---
 
-Other Platforms
-Railway, Heroku, Fly.io, DigitalOcean
+## License
+MIT License (see `LICENSE`).
 
+---
 
-📄 License
-This project is open source and available under the MIT License.
-
-🙏 Acknowledgments
-FastAPI - Amazing Python web framework
-
-Render - Lightning-fast deployment platform
-
-All contributors and government employees using the platform!
+## Contributing
+Contributions are welcome. Feel free to open issues or submit pull requests to improve features, security, UI consistency, or documentation.
+```
