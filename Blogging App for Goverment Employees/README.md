@@ -1,193 +1,117 @@
-🏛️ GovGazette (GovBlog)
+# Gov-Gazette 📰
 
-Blogging Platform for Government Employees
+A government-focused blogging platform built with **FastAPI** backend and **HTML/CSS** frontend. Government employees can post official gazette notifications, while normal users can only comment and engage.
 
-A lightweight blogging platform built with FastAPI + Jinja2 + SQLite, enabling government employees to securely create, manage, and discuss official blog/gazette posts.
+[![Deployed on Render](https://img.shields.io/badge/Deployed-Render-brightgreen)](https://gov-gazette.onrender.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Modern%20Fast%20API-blue)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3.9%2B-orange)](https://www.python.org/)
 
----
+## ✨ Features
 
-🚀 Key Features
+- **Role-based Access Control**
+  - Government employees: Create, edit, delete posts
+  - Normal users: View posts and comment only
+- **Blog Management System** for official government notifications
+- **Responsive HTML/CSS** frontend
+- **FastAPI** RESTful backend APIs
+- **Real-time** comment system
+- **Secure** authentication system
 
-🔐 Authentication (Session-Based)
+## 🚀 Live Demo
 
-- Employee registration & login
-- Secure session handling using SessionMiddleware
-- Logout functionality
+[https://gov-gazette.onrender.com/](https://gov-gazette.onrender.com/)
 
-📝 Blog Management
+## 🛠 Tech Stack
 
-- View all blogs (latest first)
-- Create new blog posts (employees only)
-- Edit/Delete posts (author-only permissions)
+Backend: FastAPI, Python
+Frontend: HTML5, CSS3, Vanilla JavaScript
+Database: SQLite (Development) / PostgreSQL (Production)
+Deployment: Render
+Authentication: JWT/Session-based
 
-💬 Comments System
+text
 
-- View comments on each blog
-- Add comments (employees only)
+## 📋 Quick Start
 
----
-
-🛠️ Tech Stack
-
-Layer| Technology
-Backend| FastAPI
-Templates| Jinja2
-Database| SQLite + SQLAlchemy
-Sessions| Starlette SessionMiddleware
-Static Files| "/static" directory
-
----
-
-📁 Project Structure
-
-Blogging App for Goverment Employees/
-│
-├── main.py              # Core FastAPI application (routes + models)
-├── templates/           # Jinja2 HTML templates
-├── static/              # CSS, JS, and assets
-├── models.py            # SQLAlchemy models (optional refactor)
-├── database.py          # DB setup helpers (optional refactor)
-├── requirements.txt     # Dependencies
-├── README.md            # Documentation
-└── LICENSE
-
-«⚠️ Note: The folder name contains a typo — "Goverment" instead of "Government".»
-
----
-
-⚙️ Requirements
-
+### Prerequisites
 - Python 3.9+
-- pip
+- Git
 
----
+### Clone & Run Locally
 
-🧑‍💻 Setup & Run Locally
-
-1. Navigate to project directory
-
-cd "Blogging App for Goverment Employees"
-
-2. Create virtual environment
-
-macOS/Linux
-
-python -m venv venv
-source venv/bin/activate
-
-Windows (PowerShell)
-
-python -m venv venv
-venv\Scripts\Activate.ps1
-
-3. Install dependencies
-
+```bash
+git clone [https://github.com/yourusername/gov-gazette.git](https://github.com/ananyascodes/Gov-Gazette/tree/main)
+cd gov-gazette
 pip install -r requirements.txt
-
-4. Run the server
-
+cp .env.example .env
+# Update .env with your configuration
 uvicorn main:app --reload --port 8000
+Visit http://localhost:8000
 
-5. Open in browser
+Environment Variables
+text
+DATABASE_URL=sqlite:///./gov_gazette.db
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+👥 User Roles & Permissions
+Role	Can Post Blogs	Can Comment	Can Edit Posts	Can Delete Posts
+Gov Employee	✅ Yes	✅ Yes	✅ Yes	✅ Yes
+Normal User	❌ No	✅ Yes	❌ No	❌ No
 
-http://localhost:8000
 
----
+📖 API Endpoints
+Method	Endpoint	Description	Auth Required
+POST	/api/posts/	Create new blog post	Gov Employee
+GET	/api/posts/	List all posts	No
+GET	/api/posts/{id}	Get single post	No
+POST	/api/posts/{id}/comments	Add comment	User
+PUT	/api/posts/{id}	Update post	Gov Employee
 
-📌 Usage Guide
 
-🧾 Register
 
-- Go to: "/register"
-- Enter details: name, contact, sector, position, password
-- Auto-login after successful registration
+🏗 Project Structure
+text
+gov-gazette/
+├── app/
+│   ├── main.py              # FastAPI app entrypoint
+│   ├── models/              # Database models
+│   ├── schemas/             # Pydantic schemas
+│   ├── routers/             # API routes
+│   ├── static/              # CSS, JS, images
+│   └── templates/           # HTML templates
+├── requirements.txt
+├── .env.example
+└── README.md
 
-🔑 Login
 
-- Go to: "/login"
-- Requires:
-  - Employee ID (numeric)
-  - Password
 
-✍️ Create Blog
+🔐 Authentication
+Gov Employees: Register/Login with government credentials
 
-- Route: "/create-blog"
-- Requires login
+Normal Users: Register/Login as regular users
 
-✏️ Edit/Delete Blog
+Role-based permissions enforced at API level
 
-- Route: "/blog/{blog_id}"
-- Only visible to the author
+🚀 Deployment
+Render (Recommended)
+Fork this repo
 
-💬 Comment
+Connect to Render
 
-- Route: "/blog/{blog_id}"
-- Logged-in users can comment
+Set build command: pip install -r requirements.txt
 
----
+Set start command: uvicorn main:app --host 0.0.0.0 --port $PORT
 
-🌐 API Routes
+Other Platforms
+Railway, Heroku, Fly.io, DigitalOcean
 
-Public Routes
 
-Method| Route| Description
-GET| "/"| Homepage (list blogs)
-GET| "/login"| Login page
-POST| "/login"| Login action
-GET| "/register"| Register page
-POST| "/register"| Register action
-GET| "/blog/{blog_id}"| Blog details + comments
+📄 License
+This project is open source and available under the MIT License.
 
-Protected Routes (Login Required)
+🙏 Acknowledgments
+FastAPI - Amazing Python web framework
 
-Method| Route
-GET| "/create-blog"
-POST| "/create-blog"
-GET| "/blog/{blog_id}/edit"
-POST| "/blog/{blog_id}/edit"
-POST| "/blog/{blog_id}/delete"
-POST| "/blog/{blog_id}/comment"
-POST| "/logout"
+Render - Lightning-fast deployment platform
 
----
-
-🗄️ Database
-
-- File: "blog.db"
-- Uses SQLite
-- Tables auto-created on startup
-
----
-
-📜 License
-
-This project is licensed under the MIT License.
-
----
-
-🤝 Contributing
-
-Contributions are welcome!
-
-You can:
-
-- Improve UI/UX
-- Enhance security
-- Refactor backend
-- Fix bugs or typos
-- Add new features
-
-Feel free to open issues or submit pull requests 🚀
-
----
-
-💡 Future Improvements
-
-- Role-based access control (Admin / Employee)
-- Rich text editor for blogs
-- Search & filtering
-- Pagination
-- REST API versioning
-- Deployment (Docker + CI/CD)
-
----
+All contributors and government employees using the platform!
