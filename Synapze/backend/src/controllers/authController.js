@@ -337,21 +337,9 @@ export const forgotPassword = asyncHandler(async (req, res) => {
   }
 
   // Generate reset token tied to registered email
-  // Security: Use dedicated RESET_TOKEN_SECRET if available, fallback to JWT_SECRET for backward compatibility
-  const resetSecret =
-    process.env.RESET_TOKEN_SECRET ||
-    process.env.JWT_SECRET ||
-    "temporary_fallback_secret_for_safety";
-
-  if (!process.env.RESET_TOKEN_SECRET) {
-    console.warn(
-      "⚠️ WARNING: RESET_TOKEN_SECRET is not defined in .env. Using fallback secret.",
-    );
-  }
-
   const resetToken = jwt.sign(
     { id: user._id, email: user.email },
-    resetSecret,
+    process.env.RESET_TOKEN_SECRET,
     { expiresIn: process.env.RESET_TOKEN_EXPIRE || "15m" },
   );
 
@@ -395,15 +383,6 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     user.resetToken = null;
     user.resetTokenExpiry = null;
     await user.save({ validateBeforeSave: false });
-
-    // In development, return the actual error to help the user configure SMTP
-    if (process.env.NODE_ENV === "development") {
-      return res.status(500).json({
-        success: false,
-        message: `Email failed to send: ${error.message}. Please verify your EMAIL_USER and EMAIL_PASS in .env.`,
-      });
-    }
-
     res.status(200).json(GENERIC_PASSWORD_RESET_RESPONSE);
   }
 });
@@ -449,13 +428,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
   try {
     // Verify the reset token
-    // Security: Use same secret as signing (dedicated secret or fallback)
-    const resetSecret =
-      process.env.RESET_TOKEN_SECRET ||
-      process.env.JWT_SECRET ||
-      "temporary_fallback_secret_for_safety";
-
-    const decoded = jwt.verify(token, resetSecret);
+    const decoded = jwt.verify(token, process.env.RESET_TOKEN_SECRET);
 
     // Find user matching email and token
     const user = await User.findOne({
