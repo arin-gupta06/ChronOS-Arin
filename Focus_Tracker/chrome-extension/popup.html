@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Focus Tracker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, 'Segoe UI', sans-serif;
+      background: #0f0e17;
+      color: #e8e6f0;
+      width: 300px;
+      min-height: 200px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #6c63ff, #a29bfe);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-icon { font-size: 24px; }
+    .header-title { font-size: 16px; font-weight: 700; }
+    .header-sub { font-size: 11px; opacity: 0.8; }
+
+    .body { padding: 16px; }
+
+    .score-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1a1929;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .score-label { font-size: 11px; color: #8b89a0; text-transform: uppercase; letter-spacing: 1px; }
+    .score-val { font-size: 28px; font-weight: 800; color: #a29bfe; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .stat-mini {
+      background: #1a1929;
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .stat-mini-label { font-size: 10px; color: #8b89a0; }
+    .stat-mini-val { font-size: 15px; font-weight: 700; margin-top: 2px; }
+
+    .suggestion {
+      background: #1a1929;
+      border-left: 3px solid #6c63ff;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #c4c2d4;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .btn-open {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #6c63ff, #574fd6);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .status {
+      text-align: center;
+      font-size: 11px;
+      color: #8b89a0;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #00b894;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .dot.error { background: #e17055; animation: none; }
+
+    .loading { color: #8b89a0; font-size: 12px; text-align: center; padding: 20px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-icon">🧠</div>
+    <div>
+      <div class="header-title">Focus Tracker</div>
+      <div class="header-sub">Tracking your productivity</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div id="content">
+      <div class="loading">Loading your focus data...</div>
+    </div>
+
+    <button id="btn-open" class="btn-open">Open Dashboard</button>
+
+    <div class="status">
+      <div class="dot" id="status-dot"></div>
+      <span id="status-text">Connecting...</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
