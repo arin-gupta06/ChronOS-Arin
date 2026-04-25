@@ -1,255 +1,334 @@
-# Synapze 🎓
+# Synapze
 
-A comprehensive student talent marketplace and mentorship platform. It empowers students and teachers to collaborate seamlessly through a task-based economy, professional mentorships, real-time messaging, and intelligent AI assistance.
+Synapze is a student talent marketplace and mentorship platform built as a full-stack web application. It helps students discover and complete tasks, build a profile through earned credits, connect with mentors, communicate in real time, and use an AI assistant for platform guidance. 
 
-![Synapze](https://via.placeholder.com/800x200/F57C00/FFFFFF?text=Synapze)
-
-## 🌟 Key Features
-
-### For Students
-
-- **Browse Tasks:** Discover tasks posted by teachers, mentors, and peers.
-- **Take & Complete Tasks:** Gain hands-on experience and earn credit points for valid submissions.
-- **Mentorship:** Connect with experienced developers and mentors or apply to become one.
-- **Build Portfolio:** Showcase completed work and earn badges on your profile.
-- **Leaderboard:** Compete with peers and climb the ranks using gamified credit points.
-
-### For Mentors
-
-- **Become a Mentor:** Apply by detailing skills, coding profiles, and professional links.
-- **Manage Profile:** Update your availability dynamically and adjust technical skillsets.
-- **Guide Students:** Accept mentorship requests and conduct 1-on-1 sessions.
-
-### For Teachers
-
-- **Post Tasks:** Create assignments with descriptions, deadlines, and credit point rewards.
-- **Review Submissions:** Approve completed tasks or request revisions with direct feedback.
-- **Rate Students:** Provide constructive ratings to boost student portfolios.
-- **Monitor Progress:** Track the completion pipeline of posted tasks through the dashboard.
-
-### 🤖 Buddy AI Assistant (Powered by Ollama)
-
-Synapze comes with an embedded, context-aware AI named **Buddy AI**.
-
-- Built on a dynamic backend architecture connected to **Ollama** (Mistral/Llama backend)
-- Trained specifically on the internal architecture of **Synapze**.
-- Highly moderated to ensure completely safe, educational, and relevant outputs.
-- Acts as a real-time guide to navigating tasks, finding mentors, or general platform query solving.
-
-### Platform Features
-
-- 🔒 **Secure Authorization:** JWT-based robust authentication with distinct Role-Based Access Controls.
-- 💬 **Real-Time Communication:** Live web sockets using `Socket.io` for instant messaging.
-- 👨‍💻 **Developer Hub:** Easily explore the passionate student team building Synapze.
-- 🌙 **Dark-Mode First UI:** A modernized, sleek, and glow-textured interface.
-- 📱 **Mobile Responsive:** Fluid layout that operates gracefully on phones, tablets, and desktops.
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Features
+
+### 👨‍🎓 Student Workflows
+
+* Browse available tasks posted on the platform.
+* View task details and accept tasks.
+* Submit completed work for review.
+* Build a profile with skills, ratings, completed tasks, and credits.
+* View the leaderboard.
+* Apply to become a mentor.
+
+### 👩‍🏫 Teacher and Mentor Workflows
+
+* Create and manage tasks.
+* Review task submissions.
+* Reassign or approve submitted work.
+* Create and update mentor profiles.
+* Manage skills, verification details, and mentorship requests.
+* Respond to session requests and mark sessions complete.
+
+### 🛠️ Admin Workflows
+
+* View and manage users.
+* Ban, unban, suspend, unsuspend, and change user roles.
+* View and manage tasks.
+* Review reports.
+* View AI logs.
+* Update system and AI settings.
+* View analytics and audit logs.
+
+---
+
+## 💬 Communication
+
+* Real-time chat using Socket.IO.
+* Protected chat APIs for task-based and direct chat rooms.
+* Socket events:
+
+  * Joining rooms
+  * Sending messages
+  * Typing indicators
+  * Read receipts
+  * Task notifications
+
+---
+
+## 🤖 AI Assistant
+
+* Built using Groq (`groq-sdk`).
+* Features:
+
+  * Authenticated AI chat
+  * Groq-specific endpoint
+  * Conversation history management
+  * Health/status checks
+  * Intent detection & moderation
+  * Rate limiting
+
+---
+
+## 🧰 Tech Stack
 
 ### Frontend
 
-- **React 18** (Vite build system)
-- **Tailwind CSS** (Custom theme presets and glassmorphic designs)
-- **React Router DOM v6**
-- **Socket.IO-Client** for real-time live chats
-- **Lucide React** & **React Icons** for beautiful UI iconography
-- **Axios** for API data fetching
-- **React Hot Toast** for sleek user notifications
+* React 18
+* Vite
+* React Router DOM v6
+* Tailwind CSS
+* Axios
+* Socket.IO Client
+* React Hot Toast
+* React Icons
+* Lucide React
+* Heroicons
+* Framer Motion
+* Firebase Client SDK
 
 ### Backend
 
-- **Node.js & Express.js**
-- **MongoDB & Mongoose** for the database schema
-- **JWT** (JSON Web Tokens) for security layers
-- **Bcrypt.js** for password hashing and salting
-- **Socket.IO** for event-driven asynchronous chat
-- **Ollama / Axios** for LLM handling and prompt optimization
-- **Express Rate Limit & Helmet** for robust web security
+* Node.js
+* Express.js
+* MongoDB (Mongoose)
+* JWT Authentication
+* Bcrypt.js
+* Cookie Parser
+* Socket.IO
+* Helmet
+* CORS
+* Express Rate Limiting
+* Nodemailer
+* Firebase Admin SDK
+* Groq SDK
+* Jest & Supertest
+* MongoDB Memory Server
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-Make sure you have installed on your local environment:
-
-- **Node.js** (v18 or higher)
-- **MongoDB** (Local or Atlas instance)
-- **Ollama** (Only necessary if you intend to run the Buddy AI local server capabilities)
-
-### General Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone https://github.com/KD2303/Synapze.git
-   cd Synapze
-   ```
-
-2. **Configure Backend**
-
-   ```bash
-   cd backend
-   npm install
-   cp .env.example .env
-   ```
-
-   **Update your `.env` to include:**
-   - `MONGODB_URI` - Your MongoDB connection string
-   - `JWT_SECRET` - Secure random encryption string
-   - `OLLAMA_API_URL` - Default: `http://localhost:11434/api/generate` (If utilizing Buddy AI)
-
-3. **Configure Frontend**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-
-### Running the Application
-
-1. **Start MongoDB** (if running a local DB)
-
-   ```bash
-   mongod
-   ```
-
-2. **Start Backend Server**
-
-   ```bash
-   cd backend
-   npm run dev
-   ```
-
-   Backend defaults to: `http://localhost:5000`
-
-3. **Start Frontend Server**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   Frontend defaults to: `http://localhost:5173`
-
-_(Note: Run `ollama serve` if you are using AI functionalities)_
-
----
-
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```
 Synapze/
+├── README.md
+├── ARCHITECTURE.md
+├── DEPLOYMENT_CHECKLIST.md
+├── DESIGN.md
+├── EMAIL_SECURITY_IMPLEMENTATION.md
+├── MONITORING_AND_ALERTING.md
+├── QUICK_REFERENCE.md
+├── TESTING_GUIDE.md
+├── docker-compose.yml
+├── package.json
+├── render.yaml
 ├── backend/
+│   ├── Dockerfile
+│   ├── jest.config.js
+│   ├── package.json
+│   ├── .env.example
 │   ├── src/
-│   │   ├── config/       # Environment & Local DB mapping
-│   │   ├── controllers/  # API business logic
-│   │   ├── middleware/   # Custom Auth, Security & Upload middlewares
-│   │   ├── models/       # Mongoose DB Schemas
-│   │   ├── routes/       # Express route mapping
-│   │   ├── services/     # Standalone services (e.g. AI Prompt logic)
-│   │   ├── utils/        # Generic formatting tools
-│   │   └── server.js     # Entry point
-│   └── package.json
+│   └── tests/
 └── frontend/
-    ├── public/           # Static assets, branding, vectors
+    ├── Dockerfile
+    ├── index.html
+    ├── package.json
     ├── src/
-    │   ├── components/   # Reusable UI (Nav, Modals, AIChat)
-    │   ├── context/      # React Context (Auth, Theme, Sockets)
-    │   ├── hooks/        # Custom React Hooks
-    │   ├── pages/        # Fully rendered React app routes
-    │   ├── services/     # Axios API integrations
-    │   ├── App.jsx       # Root Router Mapping
-    │   └── main.jsx      # React DOM Render target
-    ├── tailwind.config.js
-    └── package.json
+    └── tests/
 ```
 
 ---
 
-## 📡 Essential Core Endpoints
+## ⚙️ Getting Started
 
-### Authentication
+### Prerequisites
 
-- `POST /api/auth/register` - Create An Account
-- `POST /api/auth/login` - Authenticate & Retrieve Token
-- `GET /api/auth/me` - Fetch Secure User Model
-
-### Tasks & Progression
-
-- `GET /api/tasks` - Browse Available Tasks
-- `POST /api/tasks` - Teacher Task Creation
-- `POST /api/tasks/:id/take` - Student Accepting Task
-- `POST /api/tasks/:id/submit` - Task Evaluation Submit
-
-### Buddy AI & Messaging
-
-- `POST /api/ai/chat` - Interact with Platform's Assistant
-- `POST /api/chat/room` - Private User-to-User Threading
-- `POST /api/chat/message` - Live dispatch transmission
+* Node.js 18+
+* npm
+* MongoDB (local or Atlas)
+* Groq API key
+* Docker (optional)
 
 ---
 
-## ⚙️ Configuration
-
-### Environment Variables
-
-#### Backend (.env)
-```
-# Database
-MONGODB_URI=mongodb://localhost:27017/Synapze
-
-# Authentication
-JWT_SECRET=your_secure_random_key_here
-
-# AI & LLM
-OLLAMA_API_URL=http://localhost:11434/api/generate
-OLLAMA_MODEL=mistral
-
-# Server
-PORT=5000
-NODE_ENV=development
-```
-
-#### Frontend
-No additional environment configuration needed, connects to backend at `http://localhost:5000`
-
----
-
-## 🐳 Docker Deployment
+### 📥 Clone the Repository
 
 ```bash
-# Build and run with Docker Compose
-docker-compose up -d
+git clone https://github.com/ChronalLabs/ChronOS.git
+cd ChronOS/Synapze
+```
 
-# Check status
-docker-compose ps
+---
 
-# View logs
-docker-compose logs -f backend
-docker-compose logs -f frontend
+### 📦 Install Dependencies
 
-# Stop services
+#### Option 1: Install All
+
+```bash
+npm run install:all
+```
+
+#### Option 2: Separate Install
+
+```bash
+cd backend
+npm install
+
+cd ../frontend
+npm install
+```
+
+---
+
+### 🔐 Environment Configuration
+
+```bash
+cd backend
+cp .env.example .env
+```
+
+#### Example Variables
+
+```env
+PORT=5000
+NODE_ENV=development
+CLIENT_URL=http://localhost:5173
+
+MONGODB_URI=mongodb://127.0.0.1:27017/mits_Synapze
+
+JWT_SECRET=your_jwt_secret_key_here
+JWT_EXPIRE=7d
+
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=llama-3.1-8b-instant
+AI_PROVIDER=groq
+```
+
+---
+
+## ▶️ Running the Application
+
+### Run Both
+
+```bash
+npm run dev
+```
+
+* Backend → http://localhost:5000
+* Frontend → http://localhost:5173
+
+### Run Individually
+
+```bash
+cd backend && npm run dev
+cd frontend && npm run dev
+```
+
+---
+
+## 🏗️ Production Build
+
+```bash
+npm run build
+npm start
+```
+
+---
+
+## 🐳 Docker
+
+```bash
+docker-compose up
+docker-compose --profile debug up
+docker-compose up --build
 docker-compose down
+docker-compose down -v
+```
+
+Includes:
+
+* MongoDB
+* Redis
+* Backend API
+* Frontend
+* Debug tools (Mongo Express, Redis Commander, Mailhog)
+
+---
+
+## 🔌 API Overview
+
+### Auth (`/api/auth`)
+
+* POST `/register`
+* POST `/login`
+* GET `/me`
+* POST `/forgot-password`
+
+### Tasks (`/api/tasks`)
+
+* GET `/`
+* POST `/`
+* PUT `/:id/submit`
+* DELETE `/:id`
+
+### Users (`/api/users`)
+
+* GET `/leaderboard`
+* GET `/profile/:id`
+
+### Chat (`/api/chat`)
+
+* GET `/my-chats`
+* POST `/:id/message`
+
+### Mentors (`/api/mentors`)
+
+* POST `/apply`
+* PUT `/update`
+
+### AI (`/api/ai`)
+
+* GET `/health`
+* POST `/chat`
+* GET `/history`
+
+### Admin (`/api/admin`)
+
+* GET `/users`
+* PATCH `/users/:userId/ban`
+* GET `/analytics`
+
+---
+
+## 🌐 Frontend Routes
+
+```
+/
+/login
+/register
+/dashboard
+/profile
+/tasks/:id
+/mentors
+/admin
 ```
 
 ---
 
 ## 🧪 Testing
 
-### Unit & Integration Tests
+### Backend
+
 ```bash
 cd backend
 npm test
+npm run test:coverage
 ```
 
-### E2E Tests
+### Frontend (Playwright)
+
 ```bash
 cd frontend
 npx playwright test
 ```
 
 ### Load Testing
+
 ```bash
 cd backend
 k6 run tests/performance/load.test.js
@@ -257,141 +336,60 @@ k6 run tests/performance/load.test.js
 
 ---
 
-## 📊 API Response Format
-
-All API responses follow this structure:
-```json
-{
-  "success": true,
-  "data": { /* response data */ },
-  "message": "Operation successful"
-}
-```
-
-Error responses:
-```json
-{
-  "success": false,
-  "error": "Error message",
-  "statusCode": 400
-}
-```
-
----
-
-## 🔐 Security Features
-
-- **JWT Authentication:** Role-based access control (Student, Mentor, Teacher, Admin)
-- **Password Security:** Bcrypt hashing with salt rounds
-- **Input Sanitization:** XSS protection via express-sanitize
-- **Rate Limiting:** Prevents API abuse
-- **CORS:** Configured to allow frontend requests only
-- **Helmet:** HTTP headers security
-
----
-
-## 🎯 Key Features in Detail
-
-### Task Economy
-- Teachers/Mentors post tasks with difficulty levels and credit rewards
-- Students accept and complete tasks for portfolio building
-- Peer-to-peer task support through real-time messaging
-- Gamified leaderboard system tracking credit accumulation
-
-### Mentorship Program
-- Application-based mentor onboarding
-- Skill verification through coding profiles (GitHub, LeetCode, HackerRank)
-- Dynamic availability management
-- 1-on-1 mentorship tracking
-- Mentor ratings and student testimonials
-
-### Buddy AI Assistant
-- Context-aware responses about platform features
-- Role-specific guidance (different for students, mentors, teachers)
-- Academic integrity compliance
-- Real-time chat interface
-- Conversation history and analytics
-
-### Real-Time Features
-- Socket.IO powered instant messaging
-- Live notification system
-- Real-time task status updates
-- Active mentor/student presence detection
-
----
-
-## 📈 Project Status
-
-- ✅ **Database:** MongoDB with Mongoose schemas
-- ✅ **Authentication:** JWT-based with role model
-- ✅ **Real-time Chat:** Socket.IO implementation complete
-- ✅ **AI Integration:** Ollama-based Buddy AI deployed
-- ✅ **Frontend:** React 18 with Vite build system
-- ✅ **Testing:** 80%+ code coverage with automated tests
-- ✅ **Deployment:** Docker & CI/CD ready
-- ✅ **Production:** Ready for deployment (Score: 8.6/10)
-
----
-
-## 📋 Quick Commands Reference
+## 📜 Scripts
 
 ```bash
-# Development
-npm run dev              # Start with hot reload
-
-# Production
-npm run build            # Build for production
-npm start                # Run production build
-
-# Testing
-npm test                 # Run all tests
-npm run test:watch       # Watch mode testing
-
-# Database
-npm run db:seed          # Seed sample data
-npm run db:migrate       # Run migrations
+npm run install:all
+npm run dev
+npm run build
+npm start
 ```
 
 ---
 
-## 👨‍💻 Development Team
+## 🔒 Security & Reliability
 
-**Synapze Team:**
-- **Project Mentor:** Dr. Devesh Kumar Lal
-- **Full Stack:** Krish Dargar
-- **Frontend:** Sheetal Gourh
-- **Backend:** Arin Gupta, Anurag Mishra, Vivek Chaurasiya
-- **QA & Testing:** Ashish Garg
-
----
-
-## 📚 Additional Documentation
-
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - System design and technical architecture
-- [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) - Command reference card
-- [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) - Production deployment guide
-- [TESTING_GUIDE.md](./TESTING_GUIDE.md) - Testing procedures
-- [MONITORING_AND_ALERTING.md](./MONITORING_AND_ALERTING.md) - Operations & monitoring setup
+* JWT authentication
+* Role-based authorization
+* HTTP-only cookies
+* Password hashing
+* Helmet security
+* Rate limiting
+* Input sanitization
+* Socket authentication
+* Central error handling
+* Graceful shutdown
 
 ---
 
-## 🤝 Contributing
+## 🚀 Deployment
 
-We welcome contributions! Please follow these steps:
+* Dockerfiles included
+* docker-compose setup
+* render.yaml for deployment
+* CI/CD workflows available
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/YourFeature`)
-3. Follow the code style guidelines
-4. Commit your changes with clear messages
-5. Push to the branch and open a Pull Request
-6. Ensure all tests pass
+---
+
+## 📚 Additional Docs
+
+* ARCHITECTURE.md
+* DESIGN.md
+* TESTING_GUIDE.md
+* MONITORING_AND_ALERTING.md
 
 ---
 
 ## 📄 License
 
-This project is proprietary and licensed under PRIVATE license.
+MIT License
 
 ---
 
-_Made with ❤️ by Students for Students._
+## 🧾 Content Justification
+
+* Matches repository structure
+* Uses actual env variables
+* Reflects backend routes
+* Aligns with frontend routes
+* Matches Docker + testing setup
